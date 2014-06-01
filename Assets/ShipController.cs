@@ -16,6 +16,10 @@ public class ShipController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		HandleInput();
+	}
+
+	void HandleInput() {
 		float rotation = Input.GetAxis("Horizontal");
 		float acceleration = Input.GetAxis("Vertical");
 
@@ -24,9 +28,17 @@ public class ShipController : MonoBehaviour {
 
 		speed += acceleration;
 
-		//this.transform.Rotate (0, 0, -rotation);
 		this.rigidbody2D.AddTorque(-rotation);
 		this.rigidbody2D.AddForce (this.transform.right * acceleration);
 		//print (this.rigidbody2D.velocity);
+
+		if(Input.GetButton("Stabilize")) {
+			Stabilize();
+		}
+	}
+
+	void Stabilize() {
+		this.rigidbody2D.AddTorque(-this.rigidbody2D.angularVelocity / 15);
+		this.rigidbody2D.AddForce(-this.rigidbody2D.velocity * 2);
 	}
 }
