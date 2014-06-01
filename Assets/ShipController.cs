@@ -3,11 +3,8 @@ using System.Collections;
 
 public class ShipController : MonoBehaviour {
 
-	const float ACCEL_SCALAR = 3;
+	const float ACCEL_SCALAR = 5;
 	const float ROTAT_SCALAR = 2;
-
-	float speed;
-	float heading;
 
 	// Use this for initialization
 	void Start () {
@@ -20,16 +17,17 @@ public class ShipController : MonoBehaviour {
 	}
 
 	void HandleInput() {
-		float rotation = Input.GetAxis("Horizontal");
+		float rotation = Input.GetAxis("Rotation");
 		float acceleration = Input.GetAxis("Vertical");
+		float strafe = Input.GetAxis("Horizontal");
 
 		rotation *= ROTAT_SCALAR;
 		acceleration *= ACCEL_SCALAR;
-
-		speed += acceleration;
+		strafe *= ACCEL_SCALAR;
 
 		this.rigidbody2D.AddTorque(-rotation);
 		this.rigidbody2D.AddForce (this.transform.right * acceleration);
+		this.rigidbody2D.AddForce (-this.transform.up * strafe);
 		//print (this.rigidbody2D.velocity);
 
 		if(Input.GetButton("Stabilize")) {
