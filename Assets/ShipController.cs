@@ -6,6 +6,8 @@ public class ShipController : MonoBehaviour {
 	const float ACCEL_SCALAR = 5;
 	const float ROTAT_SCALAR = 2;
 
+	public Gun[] guns;
+
 	// Use this for initialization
 	void Start () {
 
