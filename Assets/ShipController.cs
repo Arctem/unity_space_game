@@ -8,37 +8,34 @@ public class ShipController : MonoBehaviour {
 
 	public Gun[] guns;
 
+	private Rigidbody2D body;
+
+	public float rotateThrottle {get; set;}
+	public float accelThrottle {get; set;}
+	public float strafeThrottle {get; set;}
+	public bool stabilize {get; set;}
+
 	// Use this for initialization
 	void Start () {
-
+		this.body = this.rigidbody2D;
+		this.rotateThrottle = 0.0f;
+		this.accelThrottle = 0.0f;
+		this.strafeThrottle = 0.0f;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		HandleInput();
+		this.body.AddTorque(-rotateThrottle * ROTAT_SCALAR);
+		this.body.AddForce (this.transform.right * accelThrottle * ACCEL_SCALAR);
+		this.body.AddForce (-this.transform.up * strafeThrottle * ACCEL_SCALAR);
+		//print (this.body.velocity);
+
+		if(this.stabilize)
+			this.Stabilize();
 	}
 
-	void HandleInput() {
-		float rotation = Input.GetAxis("Rotation");
-		float acceleration = Input.GetAxis("Vertical");
-		float strafe = Input.GetAxis("Horizontal");
-
-		rotation *= ROTAT_SCALAR;
-		acceleration *= ACCEL_SCALAR;
-		strafe *= ACCEL_SCALAR;
-
-		this.rigidbody2D.AddTorque(-rotation);
-		this.rigidbody2D.AddForce (this.transform.right * acceleration);
-		this.rigidbody2D.AddForce (-this.transform.up * strafe);
-		//print (this.rigidbody2D.velocity);
-
-		if(Input.GetButton("Stabilize")) {
-			Stabilize();
-		}
-	}
-
-	void Stabilize() {
-		this.rigidbody2D.AddTorque(-this.rigidbody2D.angularVelocity / 15);
-		this.rigidbody2D.AddForce(-this.rigidbody2D.velocity * 2);
+	private void Stabilize() {
+		this.body.AddTorque(-this.body.angularVelocity / 15);
+		this.body.AddForce(-this.body.velocity * 2);
 	}
 }
